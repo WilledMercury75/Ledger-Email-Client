@@ -1,0 +1,119 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Global dark theme overrides -->
+    <Style Selector="Window">
+        <Setter Property="Background" Value="#1a1a2e"/>
+    </Style>
+
+    <Style Selector="TextBlock.header">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#e94560"/>
+    </Style>
+
+    <Style Selector="TextBlock.subheader">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="#c4c4c4"/>
+    </Style>
+
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="#e94560"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#d63851"/>
+    </Style>
+
+    <Style Selector="Button.secondary">
+        <Setter Property="Background" Value="#16213e"/>
+        <Setter Property="Foreground" Value="#c4c4c4"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16,8"/>
+    </Style>
+
+    <Style Selector="Button.nav">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#8b8b8b"/>
+        <Setter Property="Padding" Value="16,12"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#16213e"/>
+        <Setter Property="Foreground" Value="#e94560"/>
+    </Style>
+
+    <Style Selector="Button.nav-active">
+        <Setter Property="Background" Value="#16213e"/>
+        <Setter Property="Foreground" Value="#e94560"/>
+        <Setter Property="Padding" Value="16,12"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="#16213e"/>
+        <Setter Property="Foreground" Value="#e0e0e0"/>
+        <Setter Property="BorderBrush" Value="#2a2a4a"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="12,8"/>
+    </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="#e94560"/>
+    </Style>
+
+    <Style Selector="ComboBox">
+        <Setter Property="Background" Value="#16213e"/>
+        <Setter Property="Foreground" Value="#e0e0e0"/>
+        <Setter Property="BorderBrush" Value="#2a2a4a"/>
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+
+    <Style Selector="ListBox">
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+
+    <Style Selector="ListBoxItem">
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="#16213e"/>
+    </Style>
+
+    <Style Selector="Border.card">
+        <Setter Property="Background" Value="#0f3460"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+
+    <Style Selector="Border.message-item">
+        <Setter Property="Background" Value="#16213e"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Margin" Value="0,2"/>
+    </Style>
+
+    <Style Selector="Border.message-item:pointerover">
+        <Setter Property="Background" Value="#1a2744"/>
+    </Style>
+
+    <Style Selector="ToggleSwitch">
+        <Setter Property="OnContent" Value="On"/>
+        <Setter Property="OffContent" Value="Off"/>
+    </Style>
+</Styles>

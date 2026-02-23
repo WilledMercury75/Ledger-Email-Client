@@ -1,0 +1,205 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LedgerUI.ViewModels"
+        x:Class="LedgerUI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Ledger — Encrypted Mail"
+        Width="1100" Height="750"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="220,*">
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="#0f3460" Padding="12">
+            <DockPanel>
+                <!-- Logo area -->
+                <StackPanel DockPanel.Dock="Top" Margin="0,8,0,24">
+                    <TextBlock Text="🔐 LEDGER" Classes="header" FontSize="20" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Encrypted Mail" FontSize="11" Foreground="#8b8b8b" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+
+                    <!-- Connection status -->
+                    <Border Background="#16213e" CornerRadius="6" Padding="8,4" Margin="0,12,0,0">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Ellipse Width="8" Height="8" Fill="#4ade80" Margin="0,0,6,0"/>
+                                <TextBlock Text="{Binding StatusMessage}" FontSize="10" Foreground="#8b8b8b" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Version -->
+                <TextBlock DockPanel.Dock="Bottom" Text="Ledger v0.1.0" FontSize="10" Foreground="#4a4a6a" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+
+                <!-- Navigation -->
+                <StackPanel Spacing="4">
+                    <Button Classes="nav" Content="📥  Inbox" Command="{Binding NavigateToCommand}" CommandParameter="Inbox"/>
+                    <Button Classes="nav" Content="✉️  Compose" Command="{Binding NavigateToCommand}" CommandParameter="Compose"/>
+                    <Button Classes="nav" Content="📤  Sent" Command="{Binding NavigateToCommand}" CommandParameter="Sent"/>
+                    <Button Classes="nav" Content="📝  Drafts" Command="{Binding NavigateToCommand}" CommandParameter="Drafts"/>
+
+                    <Separator Background="#2a2a4a" Margin="0,12"/>
+
+                    <Button Classes="nav" Content="🌐  Peers" Command="{Binding NavigateToCommand}" CommandParameter="Peers"/>
+                    <Button Classes="nav" Content="⚙️  Settings" Command="{Binding NavigateToCommand}" CommandParameter="Settings"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Border Grid.Column="1" Padding="24,16">
+            <Panel>
+
+                <!-- INBOX / SENT / DRAFTS VIEW -->
+                <DockPanel IsVisible="{Binding CurrentView, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           x:Name="MessagesPanel">
+                    <DockPanel.IsVisible>
+                        <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                            <Binding Path="CurrentView" Converter="{x:Static StringConverters.IsNotNullOrEmpty}"/>
+                        </MultiBinding>
+                    </DockPanel.IsVisible>
+
+                    <!-- Show when Inbox, Sent, or Drafts -->
+                    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,16"
+                                IsVisible="{Binding CurrentView, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                        <DockPanel>
+                            <TextBlock Text="{Binding CurrentView}" Classes="header" DockPanel.Dock="Left"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                                <Button Classes="secondary" Content="🔄 Refresh" Command="{Binding RefreshMessagesCommand}"/>
+                                <Button Classes="secondary" Content="📧 Fetch Gmail" Command="{Binding FetchGmailCommand}"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </StackPanel>
+
+                    <!-- Message list -->
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding Messages}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MainWindowViewModel">
+                                    <!-- We use the parent DataTemplate -->
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="4"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+
+                <!-- COMPOSE VIEW -->
+                <StackPanel IsVisible="False" x:Name="ComposePanel" Spacing="12">
+                    <TextBlock Text="Compose Message" Classes="header"/>
+
+                    <TextBlock Text="To:" Classes="subheader" Margin="0,8,0,0"/>
+                    <TextBox Text="{Binding ComposeTo}" Watermark="ledger:abc123... or user@gmail.com"/>
+
+                    <TextBlock Text="Subject:" Classes="subheader"/>
+                    <TextBox Text="{Binding ComposeSubject}" Watermark="Message subject"/>
+
+                    <TextBlock Text="Delivery Mode:" Classes="subheader"/>
+                    <ComboBox SelectedItem="{Binding ComposeMode}" Width="200">
+                        <ComboBoxItem Content="auto" IsSelected="True"/>
+                        <ComboBoxItem Content="p2p_only"/>
+                        <ComboBoxItem Content="gmail_only"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Message:" Classes="subheader"/>
+                    <TextBox Text="{Binding ComposeBody}" Watermark="Type your message..."
+                             AcceptsReturn="True" Height="200" TextWrapping="Wrap"/>
+
+                    <Button Classes="primary" Content="📨 Send Message" Command="{Binding SendMessageCommand}"
+                            HorizontalAlignment="Left" Margin="0,8,0,0"/>
+                </StackPanel>
+
+                <!-- SETTINGS VIEW -->
+                <ScrollViewer x:Name="SettingsPanel" IsVisible="False">
+                    <StackPanel Spacing="16" MaxWidth="600">
+                        <TextBlock Text="Settings" Classes="header"/>
+
+                        <!-- Identity Card -->
+                        <Border Classes="card">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Your Identity" Classes="subheader"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Ledger ID:" FontWeight="SemiBold" Foreground="#e94560"/>
+                                    <TextBlock Text="{Binding LedgerId}" Foreground="#c4c4c4" TextWrapping="Wrap" FontSize="12"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Peer ID:" FontWeight="SemiBold" Foreground="#e94560"/>
+                                    <TextBlock Text="{Binding PeerId}" Foreground="#c4c4c4" TextWrapping="Wrap" FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Gmail Configuration -->
+                        <Border Classes="card">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Gmail Configuration" Classes="subheader"/>
+                                <TextBlock Text="{Binding GmailConfigured, StringFormat='Configured: {0}'}"
+                                           Foreground="#8b8b8b" FontSize="12"/>
+                                <TextBox Text="{Binding GmailEmail}" Watermark="your.email@gmail.com"/>
+                                <TextBox Text="{Binding GmailAppPassword}" Watermark="App Password"
+                                         PasswordChar="•"/>
+                                <Button Classes="primary" Content="Save Gmail Config"
+                                        Command="{Binding SaveGmailConfigCommand}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Delivery Mode -->
+                        <Border Classes="card">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Delivery Settings" Classes="subheader"/>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <TextBlock Text="Mode:" VerticalAlignment="Center"/>
+                                    <ComboBox SelectedItem="{Binding DeliveryMode}" Width="200">
+                                        <ComboBoxItem Content="auto" IsSelected="True"/>
+                                        <ComboBoxItem Content="p2p_only"/>
+                                        <ComboBoxItem Content="gmail_only"/>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Tor Routing (Stub):" VerticalAlignment="Center"/>
+                                    <ToggleSwitch IsChecked="{Binding TorEnabled}"/>
+                                </StackPanel>
+                                <Button Classes="primary" Content="Save Settings"
+                                        Command="{Binding SaveSettingsCommand}"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- PEERS VIEW -->
+                <StackPanel x:Name="PeersPanel" IsVisible="False" Spacing="12">
+                    <TextBlock Text="Network Peers" Classes="header"/>
+
+                    <Border Classes="card">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Connect to Peer" Classes="subheader"/>
+                            <TextBox Text="{Binding ConnectAddress}"
+                                     Watermark="/ip4/192.168.1.x/tcp/9420"/>
+                            <Button Classes="primary" Content="Connect"
+                                    Command="{Binding ConnectToPeerCommand}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="Connected Peers" Classes="subheader" Margin="0,8,0,0"/>
+                    <ItemsControl ItemsSource="{Binding Peers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Spacing="4"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </StackPanel>
+
+            </Panel>
+        </Border>
+    </Grid>
+</Window>

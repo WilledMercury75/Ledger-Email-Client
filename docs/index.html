@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ledger — Encrypted Mail, Reimagined</title>
+    <title>Ledger — Who Tells Your Story?</title>
     <meta name="description"
         content="Decentralized encrypted mail client with P2P messaging, Gmail bridge, and end-to-end encryption.">
     <link
@@ -552,6 +552,36 @@
             font-style: italic;
         }
 
+        /* ── Quote banner ── */
+        .quote-banner {
+            text-align: center;
+            padding: 48px 20px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .quote-banner blockquote {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.6rem;
+            font-style: italic;
+            color: var(--text-2);
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .quote-banner blockquote em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .quote-banner .attribution {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: var(--text-3);
+            letter-spacing: 1px;
+        }
+
         /* ── Responsive ── */
         @media (max-width: 900px) {
             .features-grid {
@@ -618,13 +648,14 @@
 
         <!-- ── HERO ── -->
         <section class="hero">
-            <div class="hero-eyebrow">End-to-End Encrypted</div>
+            <div class="hero-eyebrow">Not throwing away my shot</div>
             <h1>
                 Your words<br>deserve a <em class="serif">sealed</em> envelope
             </h1>
             <p class="hero-sub">
                 Decentralized mail with peer-to-peer encryption and automatic Gmail fallback.
                 No servers to trust. No middlemen to read your letters.
+                Your legacy is what you write — we just make it unhackable.
             </p>
             <div class="hero-btns">
                 <a href="https://github.com/WilledMercury75/Ledger-Email-Client" class="btn btn-accent">
@@ -643,22 +674,24 @@
                 </div>
                 <div class="term-body">
                     <div><span class="p">❯</span> <span class="c">cargo run --release</span></div>
-                    <div><span class="d"> Ledger Core v0.1.0</span></div>
-                    <div><span class="g">✓</span> <span class="d">Identity sealed — ledger:GNH1P6TV…</span></div>
+                    <div><span class="d"> Ledger Core v0.1.0 — "the room where it happens"</span></div>
+                    <div><span class="g">✓</span> <span class="d">Identity sealed — ledger:A.Ham…</span></div>
                     <div><span class="g">✓</span> <span class="d">P2P courier network active on :9420</span></div>
                     <div><span class="g">✓</span> <span class="d">API dispatch ready on 127.0.0.1:8420</span></div>
+                    <div><span class="g">✓</span> <span class="d">History has its eyes on this connection</span></div>
                     <div style="margin-top:6px"><span class="p">❯</span> <span class="c">curl
                             localhost:8420/api/identity</span></div>
-                    <div><span class="o">{"ledger_id": "ledger:GNH1P6TV…", "status": "non-stop"}</span></div>
+                    <div><span class="o">{"ledger_id": "ledger:A.Ham…", "status": "non-stop"}</span></div>
                 </div>
             </div>
         </section>
 
         <!-- ── FEATURES ── -->
         <section id="features">
-            <div class="section-label">Capabilities</div>
+            <div class="section-label">Outgunned. Outmanned.</div>
             <h2>Privacy without compromise</h2>
             <p class="section-desc">
+                Outnumbered, outplanned — but never outwritten.
                 Every message is sealed before it leaves your machine.
                 Every route is a fallback. Nothing is left to chance.
             </p>
@@ -667,14 +700,14 @@
                 <div class="feat">
                     <div class="feat-icon red">✦</div>
                     <h3>Sealed Cryptography</h3>
-                    <p>Ed25519 identity, X25519 key exchange, ChaCha20-Poly1305 authenticated encryption. The same
-                        primitives trusted by Signal and WireGuard.</p>
+                    <p>Ed25519 identity, X25519 key exchange, ChaCha20-Poly1305 authenticated encryption.
+                        The same primitives trusted by Signal and WireGuard. Talk less. Encrypt more.</p>
                 </div>
                 <div class="feat">
                     <div class="feat-icon gold">⬡</div>
                     <h3>P2P Delivery</h3>
-                    <p>Direct encrypted dispatch via libp2p. No central authority, no post office. Kademlia DHT stores
-                        messages until your recipient comes online.</p>
+                    <p>Direct encrypted dispatch via libp2p. No king, no central authority, no post office.
+                        Kademlia DHT holds your letters until your correspondent arrives.</p>
                 </div>
                 <div class="feat">
                     <div class="feat-icon red">◈</div>
@@ -685,42 +718,52 @@
                 <div class="feat">
                     <div class="feat-icon gold">↯</div>
                     <h3>Automatic Routing</h3>
-                    <p>P2P → DHT → Gmail. Your words find their audience by any route necessary. Choose auto, P2P-only,
+                    <p>P2P → DHT → Gmail. Like a good treasury secretary, it finds the most efficient route for every
+                        dispatch. Choose auto, P2P-only,
                         or Gmail-only modes.</p>
                 </div>
                 <div class="feat">
                     <div class="feat-icon red">⊞</div>
                     <h3>Plugin Engine</h3>
-                    <p>Java-based message processing pipeline. Built-in spam filter, auto-tagger, and a simple API to
-                        write your own extensions.</p>
+                    <p>Java-based message processing pipeline. Built-in spam filter, auto-tagger —
+                        immigrants, we get the job done. Write your own extensions.</p>
                 </div>
                 <div class="feat">
                     <div class="feat-icon gold">⌘</div>
                     <h3>Open API</h3>
-                    <p>Full REST API on port 8420. Build clients, bots, or integrations in any language. Every feature
-                        is an endpoint.</p>
+                    <p>Full REST API on port 8420. Build clients, bots, or integrations in any language.
+                        The world is wide enough for every integration.</p>
                 </div>
             </div>
         </section>
 
         <!-- ── STACK ── -->
+        <!-- ── QUOTE ── -->
+        <div class="quote-banner">
+            <blockquote>"I am inimitable, I am an <em>original</em>"</blockquote>
+            <div class="attribution">— ON BUILDING FROM SCRATCH WITH $0 AND NO SERVERS</div>
+        </div>
+
         <section class="stack-section" id="stack">
             <div class="section-label">Architecture</div>
             <h2>Four languages. One republic.</h2>
             <p class="section-desc">
-                Each component written in the language that serves it best — forged together through a unified API.
+                Each component written in the language that serves it best — forged together like a cabinet, through a
+                unified API.
             </p>
 
             <div class="stack-grid reveal">
                 <div class="stack-card">
                     <div class="stack-lang rust">Rust</div>
                     <h3>Core Engine</h3>
-                    <p>Cryptography, P2P networking, DHT, Gmail bridge, SQLite storage, REST API server.</p>
+                    <p>Cryptography, P2P networking, DHT, Gmail bridge, SQLite storage, REST API server. The treasury of
+                        the entire operation.</p>
                 </div>
                 <div class="stack-card">
                     <div class="stack-lang cs">C# · Avalonia</div>
                     <h3>Desktop UI</h3>
-                    <p>Cross-platform MVVM desktop app with fluent dark theme. Windows, macOS, Linux.</p>
+                    <p>Cross-platform MVVM desktop app with fluent dark theme. Windows, macOS, Linux. Looks so good
+                        you'll be helpless.</p>
                 </div>
                 <div class="stack-card">
                     <div class="stack-lang java">Java</div>
@@ -737,9 +780,9 @@
 
         <!-- ── API ── -->
         <section id="api">
-            <div class="section-label">Reference</div>
+            <div class="section-label">The Reynolds Pamphlet of APIs</div>
             <h2>The Dispatches</h2>
-            <p class="section-desc">JSON REST API on 127.0.0.1:8420</p>
+            <p class="section-desc">JSON REST API on 127.0.0.1:8420 — fully transparent, nothing hidden</p>
 
             <div class="api-grid reveal">
                 <div class="api-row">
@@ -796,15 +839,21 @@
         </section>
 
         <!-- ── CTA ── -->
+        <div class="quote-banner">
+            <blockquote>"I wrote my way out of hell. I wrote my way to <em>revolution</em>"</blockquote>
+            <div class="attribution">— ON WHY WE BUILT THIS</div>
+        </div>
+
         <div class="cta">
             <div class="section-label">Open Source</div>
             <h2>Rise up</h2>
             <p class="section-desc">
                 Ledger is MIT-licensed and ready for contributors.
-                Take control of your correspondence.
+                Who lives, who dies, who tells your story?
+                You do — with encrypted mail.
             </p>
             <a href="https://github.com/WilledMercury75/Ledger-Email-Client" class="btn btn-accent">
-                View Repository →
+                I'm Not Throwing Away My Shot →
             </a>
         </div>
 
@@ -814,6 +863,8 @@
                 <a href="https://github.com/WilledMercury75/Ledger-Email-Client">Source</a> ·
                 MIT License
                 <span class="aside">there's a million things I haven't sent — but just you wait</span>
+                <span class="aside">"a ten-dollar founding father without a father got a lot farther by working a lot
+                    harder"</span>
             </p>
         </footer>
     </div>

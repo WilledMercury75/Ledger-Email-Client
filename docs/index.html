@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ledger — Decentralized Encrypted Mail Client</title>
+    <title>Ledger — Encrypted Mail, Reimagined</title>
     <meta name="description"
-        content="Open-source decentralized encrypted mail client with P2P messaging, Gmail bridge, and end-to-end encryption. Built with Rust, JavaScript API, and cross-platform UI.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        content="Decentralized encrypted mail client with P2P messaging, Gmail bridge, and end-to-end encryption.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
         rel="stylesheet">
     <style>
         * {
@@ -17,752 +18,812 @@
         }
 
         :root {
-            --bg-primary: #0a0a1a;
-            --bg-secondary: #0f1629;
-            --bg-card: #141830;
+            --bg: #050510;
+            --bg-2: #0a0a1e;
+            --bg-card: rgba(15, 15, 40, 0.6);
             --accent: #e94560;
-            --accent-glow: rgba(233, 69, 96, 0.3);
-            --text-primary: #f0f0f0;
-            --text-secondary: #8b8fa3;
-            --text-dim: #4a4e6a;
-            --border: #1e2340;
-            --gradient-1: linear-gradient(135deg, #e94560, #0f3460);
-            --gradient-2: linear-gradient(135deg, #e94560 0%, #533483 50%, #0f3460 100%);
+            --accent-dim: rgba(233, 69, 96, 0.12);
+            --accent-glow: rgba(233, 69, 96, 0.25);
+            --gold: #c9a84c;
+            --gold-dim: rgba(201, 168, 76, 0.1);
+            --text: #eaeaf0;
+            --text-2: #7a7e9a;
+            --text-3: #3d4060;
+            --border: rgba(255, 255, 255, 0.06);
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Animated background */
-        .bg-grid {
+        .serif {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        /* ── Ambient background ── */
+        .ambient {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(rgba(233, 69, 96, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(233, 69, 96, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+            inset: 0;
             z-index: 0;
-            animation: gridMove 20s linear infinite;
+            pointer-events: none;
         }
 
-        @keyframes gridMove {
+        .ambient::before {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            top: -200px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(233, 69, 96, 0.08) 0%, transparent 70%);
+            animation: drift 15s ease-in-out infinite alternate;
+        }
+
+        .ambient::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            bottom: -100px;
+            left: -100px;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.05) 0%, transparent 70%);
+            animation: drift 18s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes drift {
             0% {
-                transform: translate(0, 0);
+                transform: translate(0, 0) scale(1);
             }
 
             100% {
-                transform: translate(60px, 60px);
+                transform: translate(40px, -30px) scale(1.1);
             }
         }
 
-        .glow-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
-            z-index: 0;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .glow-orb-1 {
-            width: 400px;
-            height: 400px;
-            background: #e94560;
-            top: -100px;
-            right: -100px;
-        }
-
-        .glow-orb-2 {
-            width: 300px;
-            height: 300px;
-            background: #0f3460;
-            bottom: 10%;
-            left: -50px;
-            animation-delay: -4s;
-        }
-
-        .glow-orb-3 {
-            width: 200px;
-            height: 200px;
-            background: #533483;
-            top: 50%;
-            right: 20%;
-            animation-delay: -2s;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-
-            50% {
-                transform: translate(20px, -20px);
-            }
-        }
-
-        .container {
+        .wrap {
             position: relative;
             z-index: 1;
-            max-width: 1100px;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 28px;
         }
 
-        /* Navigation */
+        /* ── Nav ── */
         nav {
-            padding: 20px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .logo {
-            font-size: 1.4rem;
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-weight: 800;
+            font-size: 1.25rem;
             letter-spacing: -0.5px;
+            text-decoration: none;
+            color: var(--text);
         }
 
-        .logo span {
-            color: var(--accent);
+        .nav-brand img {
+            height: 32px;
         }
 
         .nav-links {
             display: flex;
-            gap: 32px;
+            gap: 36px;
             list-style: none;
         }
 
         .nav-links a {
-            color: var(--text-secondary);
+            color: var(--text-2);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: color 0.2s;
+            letter-spacing: 0.3px;
         }
 
         .nav-links a:hover {
-            color: var(--accent);
+            color: var(--text);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 28px;
+        }
+
+        .hero-eyebrow::before,
+        .hero-eyebrow::after {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.4;
+        }
+
+        h1 {
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+
+        h1 em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--accent), #ff7eb3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1 em.serif {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--gold), #e8d89a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--text-2);
+            max-width: 560px;
+            margin: 0 auto 44px;
+            line-height: 1.75;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 24px;
-            border-radius: 8px;
+            padding: 13px 28px;
+            border-radius: 10px;
             font-weight: 600;
             font-size: 0.9rem;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.25s;
             border: none;
             cursor: pointer;
         }
 
-        .btn-primary {
+        .btn-accent {
             background: var(--accent);
-            color: white;
-            box-shadow: 0 4px 20px var(--accent-glow);
+            color: #fff;
+            box-shadow: 0 4px 24px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
-        .btn-primary:hover {
+        .btn-accent:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--accent-glow);
+            box-shadow: 0 8px 32px var(--accent-glow);
         }
 
-        .btn-secondary {
-            background: var(--bg-card);
-            color: var(--text-primary);
+        .btn-ghost {
+            background: var(--glass);
+            color: var(--text);
             border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
         }
 
-        .btn-secondary:hover {
-            border-color: var(--accent);
+        .btn-ghost:hover {
+            border-color: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
 
-        /* Hero */
-        .hero {
-            padding: 80px 0 60px;
-            text-align: center;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent);
-            background: rgba(233, 69, 96, 0.1);
-            border: 1px solid rgba(233, 69, 96, 0.2);
-            border-radius: 20px;
-            margin-bottom: 24px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            letter-spacing: -1.5px;
-        }
-
-        h1 .gradient-text {
-            background: var(--gradient-2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Terminal demo */
+        /* ── Terminal ── */
         .terminal {
-            background: #0d1117;
-            border: 1px solid #21262d;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 60px auto;
-            max-width: 700px;
-            text-align: left;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .terminal-header {
-            background: #161b22;
-            padding: 12px 16px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .terminal-dot.red {
-            background: #ff5f56;
-        }
-
-        .terminal-dot.yellow {
-            background: #ffbd2e;
-        }
-
-        .terminal-dot.green {
-            background: #27c93f;
-        }
-
-        .terminal-body {
-            padding: 20px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.85rem;
-            line-height: 1.8;
-            color: #8b949e;
-        }
-
-        .terminal-body .prompt {
-            color: #e94560;
-        }
-
-        .terminal-body .cmd {
-            color: #f0f6fc;
-        }
-
-        .terminal-body .output {
-            color: #58a6ff;
-        }
-
-        .terminal-body .success {
-            color: #3fb950;
-        }
-
-        /* Features */
-        .features {
-            padding: 80px 0;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 48px;
-            font-size: 1.05rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
+            background: #0c0c1d;
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            transition: all 0.3s;
+            border-radius: 14px;
+            max-width: 660px;
+            margin: 64px auto 0;
+            overflow: hidden;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.03);
         }
 
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 16px;
-        }
-
-        .feature-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* Architecture */
-        .architecture {
-            padding: 60px 0;
-        }
-
-        .arch-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 32px;
-        }
-
-        .arch-table th,
-        .arch-table td {
-            padding: 16px 20px;
-            text-align: left;
+        .term-bar {
+            padding: 14px 18px;
+            display: flex;
+            gap: 7px;
+            background: rgba(255, 255, 255, 0.02);
             border-bottom: 1px solid var(--border);
         }
 
-        .arch-table th {
+        .term-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .term-dot:nth-child(1) {
+            background: #ff5f57;
+        }
+
+        .term-dot:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .term-dot:nth-child(3) {
+            background: #28c840;
+        }
+
+        .term-body {
+            padding: 22px 24px;
+            font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.82rem;
+            line-height: 2;
+        }
+
+        .term-body .p {
             color: var(--accent);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
         }
 
-        .arch-table td {
-            font-size: 0.9rem;
+        .term-body .c {
+            color: #e0e0e8;
         }
 
-        .arch-table .lang-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .lang-rust {
-            background: rgba(222, 165, 132, 0.15);
-            color: #dea584;
-        }
-
-        .lang-csharp {
-            background: rgba(104, 33, 122, 0.2);
-            color: #b877db;
-        }
-
-        .lang-java {
-            background: rgba(237, 134, 56, 0.15);
-            color: #ed8638;
-        }
-
-        .lang-python {
-            background: rgba(53, 114, 165, 0.2);
-            color: #4b8bbe;
-        }
-
-        .lang-js {
-            background: rgba(240, 219, 79, 0.15);
-            color: #f0db4f;
-        }
-
-        /* API section */
-        .api-section {
-            padding: 60px 0;
-        }
-
-        .api-endpoint {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-family: 'SF Mono', monospace;
-            font-size: 0.85rem;
-            transition: border-color 0.2s;
-        }
-
-        .api-endpoint:hover {
-            border-color: var(--accent);
-        }
-
-        .method {
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            min-width: 50px;
-            text-align: center;
-        }
-
-        .method-get {
-            background: rgba(59, 185, 80, 0.15);
-            color: #3fb950;
-        }
-
-        .method-post {
-            background: rgba(88, 166, 255, 0.15);
+        .term-body .o {
             color: #58a6ff;
         }
 
-        .method-put {
-            background: rgba(210, 153, 34, 0.15);
+        .term-body .g {
+            color: #3fb950;
+        }
+
+        .term-body .d {
+            color: var(--text-3);
+        }
+
+        /* ── Section shared ── */
+        section {
+            padding: 100px 0;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            color: var(--text-2);
+            max-width: 500px;
+            font-size: 1rem;
+            margin-bottom: 52px;
+        }
+
+        /* ── Feature grid ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .feat {
+            padding: 36px 32px;
+            background: var(--bg-2);
+            transition: background 0.3s;
+        }
+
+        .feat:hover {
+            background: rgba(15, 15, 40, 0.9);
+        }
+
+        .feat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .feat-icon.red {
+            background: var(--accent-dim);
+        }
+
+        .feat-icon.gold {
+            background: var(--gold-dim);
+        }
+
+        .feat h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feat p {
+            color: var(--text-2);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* ── Stack table ── */
+        .stack-section {
+            border-top: 1px solid var(--border);
+        }
+
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stack-card {
+            padding: 28px 24px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .stack-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stack-lang {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .stack-lang.rust {
+            color: #dea584;
+        }
+
+        .stack-lang.cs {
+            color: #b877db;
+        }
+
+        .stack-lang.java {
+            color: #ed8638;
+        }
+
+        .stack-lang.py {
+            color: #4b8bbe;
+        }
+
+        .stack-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .stack-card p {
+            color: var(--text-2);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        /* ── API ── */
+        .api-grid {
+            display: grid;
+            gap: 6px;
+        }
+
+        .api-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.82rem;
+            transition: border-color 0.2s;
+        }
+
+        .api-row:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            min-width: 52px;
+            text-align: center;
+        }
+
+        .tag-g {
+            background: rgba(59, 185, 80, 0.12);
+            color: #3fb950;
+        }
+
+        .tag-p {
+            background: rgba(88, 166, 255, 0.12);
+            color: #58a6ff;
+        }
+
+        .tag-u {
+            background: rgba(210, 153, 34, 0.12);
             color: #d29922;
         }
 
-        .method-delete {
-            background: rgba(248, 81, 73, 0.15);
+        .tag-d {
+            background: rgba(248, 81, 73, 0.12);
             color: #f85149;
         }
 
         .api-path {
-            color: var(--text-primary);
+            color: var(--text);
         }
 
         .api-desc {
-            color: var(--text-dim);
+            color: var(--text-3);
             margin-left: auto;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
         }
 
-        /* Footer */
+        /* ── CTA ── */
+        .cta {
+            text-align: center;
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .cta h2 {
+            margin-bottom: 12px;
+        }
+
+        .cta .section-desc {
+            margin: 0 auto 36px;
+        }
+
+        /* ── Footer ── */
         footer {
-            padding: 40px 0;
+            padding: 32px 0;
             text-align: center;
             border-top: 1px solid var(--border);
-            margin-top: 60px;
         }
 
         footer p {
-            color: var(--text-dim);
-            font-size: 0.85rem;
+            color: var(--text-3);
+            font-size: 0.8rem;
         }
 
         footer a {
-            color: var(--accent);
+            color: var(--text-2);
             text-decoration: none;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        footer .aside {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.7rem;
+            color: var(--text-3);
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: 1fr;
             }
 
-            .hero {
-                padding: 40px 0 30px;
+            .stack-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+        }
 
+        @media (max-width: 640px) {
             .nav-links {
                 display: none;
             }
 
-            .feature-grid {
+            .hero {
+                padding: 60px 0 40px;
+            }
+
+            .stack-grid {
                 grid-template-columns: 1fr;
             }
 
             .api-desc {
                 display: none;
             }
+
+            section {
+                padding: 60px 0;
+            }
+        }
+
+        /* ── Animations ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="bg-grid"></div>
-    <div class="glow-orb glow-orb-1"></div>
-    <div class="glow-orb glow-orb-2"></div>
-    <div class="glow-orb glow-orb-3"></div>
+    <div class="ambient"></div>
 
-    <div class="container">
+    <div class="wrap">
         <nav>
-            <div class="logo"><img src="quill-logo.png" alt="Ledger"
-                    style="height:36px;vertical-align:middle;margin-right:8px;" /><span>Ledger</span>Mail</div>
+            <a href="#" class="nav-brand">
+                <img src="logo.png" alt="Ledger">
+                Ledger
+            </a>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#stack">Architecture</a></li>
                 <li><a href="#api">API</a></li>
-                <li><a href="https://github.com/WilledMercury75/Ledger-Email-Client">GitHub</a></li>
+                <li><a href="https://github.com/WilledMercury75/Ledger-Email-Client">GitHub ↗</a></li>
             </ul>
         </nav>
 
+        <!-- ── HERO ── -->
         <section class="hero">
-            <img src="quill-logo.png" alt="Ledger Quill"
-                style="height:100px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(233,69,96,0.4));" />
-            <div class="badge">🛡️ "I am not throwing away my shot" — at privacy</div>
+            <div class="hero-eyebrow">End-to-End Encrypted</div>
             <h1>
-                Write Your<br>
-                <span class="gradient-text">Letters in Cipher</span>
+                Your words<br>deserve a <em class="serif">sealed</em> envelope
             </h1>
-            <p class="hero-subtitle">
-                In the tradition of the Founders who wrote in code to protect their words —
-                Ledger delivers peer-to-peer encrypted mail with automatic Gmail fallback.
-                No servers. No surveillance. Your quill, your seal.
+            <p class="hero-sub">
+                Decentralized mail with peer-to-peer encryption and automatic Gmail fallback.
+                No servers to trust. No middlemen to read your letters.
             </p>
-            <div class="hero-actions">
-                <a href="https://github.com/WilledMercury75/Ledger-Email-Client" class="btn btn-primary">
-                    ⭐ View on GitHub
+            <div class="hero-btns">
+                <a href="https://github.com/WilledMercury75/Ledger-Email-Client" class="btn btn-accent">
+                    Get Started
                 </a>
-                <a href="#api" class="btn btn-secondary">
-                    📡 Explore API
+                <a href="#api" class="btn btn-ghost">
+                    View API →
                 </a>
             </div>
 
             <div class="terminal">
-                <div class="terminal-header">
-                    <div class="terminal-dot red"></div>
-                    <div class="terminal-dot yellow"></div>
-                    <div class="terminal-dot green"></div>
+                <div class="term-bar">
+                    <div class="term-dot"></div>
+                    <div class="term-dot"></div>
+                    <div class="term-dot"></div>
                 </div>
-                <div class="terminal-body">
-                    <div><span class="prompt">$</span> <span class="cmd">cargo run --release</span></div>
-                    <div><span class="output">Ledger Core v0.1.0 starting...</span></div>
-                    <div><span class="success">✓</span> Identity loaded: ledger:GNH1P6TV...</div>
-                    <div><span class="success">✓</span> P2P node started on /ip4/0.0.0.0/tcp/9420</div>
-                    <div><span class="success">✓</span> REST API listening on 127.0.0.1:8420</div>
-                    <div></div>
-                    <div><span class="prompt">$</span> <span class="cmd">curl localhost:8420/api/identity</span></div>
-                    <div><span class="output">{"success": true, "data": {"ledger_id": "ledger:GNH1P6TV..."}}</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="features" id="features">
-            <h2 class="section-title">"Why Do You Write Like You're Running Out of Time?"</h2>
-            <p class="section-subtitle">Because every word deserves the protection the Founders gave theirs.</p>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🪶</div>
-                    <h3>Sealed With Cipher</h3>
-                    <p>Ed25519 signatures, X25519 key exchange, ChaCha20-Poly1305 — cryptography worthy of Hamilton's
-                        own correspondence.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📜</div>
-                    <h3>Dispatch by Courier</h3>
-                    <p>Direct encrypted messaging via libp2p — no crown, no post office, no middlemen. Kademlia DHT
-                        holds your letters until the recipient arrives.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏛️</div>
-                    <h3>The Public Post</h3>
-                    <p>When the courier can't reach you, the letter travels through Gmail — but sealed so tightly that
-                        no postmaster can read it.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚔️</div>
-                    <h3>Never Undelivered</h3>
-                    <p>P2P → DHT → Gmail. Like Hamilton, your words will find their audience — by any route necessary.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🧩</div>
-                    <h3>Plugin System</h3>
-                    <p>Java-based plugin engine. Built-in spam filter and auto-tagger. Write your own message processors
-                        with the MessagePlugin API.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📡</div>
-                    <h3>REST API</h3>
-                    <p>Full JSON API on 127.0.0.1:8420. Build your own clients, bots, or integrations in any language —
-                        JavaScript, Python, or anything with HTTP.</p>
+                <div class="term-body">
+                    <div><span class="p">❯</span> <span class="c">cargo run --release</span></div>
+                    <div><span class="d"> Ledger Core v0.1.0</span></div>
+                    <div><span class="g">✓</span> <span class="d">Identity sealed — ledger:GNH1P6TV…</span></div>
+                    <div><span class="g">✓</span> <span class="d">P2P courier network active on :9420</span></div>
+                    <div><span class="g">✓</span> <span class="d">API dispatch ready on 127.0.0.1:8420</span></div>
+                    <div style="margin-top:6px"><span class="p">❯</span> <span class="c">curl
+                            localhost:8420/api/identity</span></div>
+                    <div><span class="o">{"ledger_id": "ledger:GNH1P6TV…", "status": "non-stop"}</span></div>
                 </div>
             </div>
         </section>
 
-        <section class="architecture" id="architecture">
-            <h2 class="section-title">"A Treasury of Words"</h2>
-            <p class="section-subtitle">Four languages forged into one system — like a republic of code.</p>
-            <table class="arch-table">
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Language</th>
-                        <th>Purpose</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Core Engine</td>
-                        <td><span class="lang-badge lang-rust">Rust</span></td>
-                        <td>Crypto, P2P networking, DHT, Gmail bridge, REST API server</td>
-                    </tr>
-                    <tr>
-                        <td>Desktop UI</td>
-                        <td><span class="lang-badge lang-csharp">C# / Avalonia</span></td>
-                        <td>Cross-platform MVVM desktop application with dark theme</td>
-                    </tr>
-                    <tr>
-                        <td>Plugin Engine</td>
-                        <td><span class="lang-badge lang-java">Java</span></td>
-                        <td>Extensible message processing pipeline (spam filter, auto-tagger)</td>
-                    </tr>
-                    <tr>
-                        <td>CLI Toolkit</td>
-                        <td><span class="lang-badge lang-python">Python</span></td>
-                        <td>Interactive REPL, smoke tests, automation scripts</td>
-                    </tr>
-                    <tr>
-                        <td>REST API</td>
-                        <td><span class="lang-badge lang-js">JSON / HTTP</span></td>
-                        <td>Unified interface for all clients — build JavaScript integrations</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- ── FEATURES ── -->
+        <section id="features">
+            <div class="section-label">Capabilities</div>
+            <h2>Privacy without compromise</h2>
+            <p class="section-desc">
+                Every message is sealed before it leaves your machine.
+                Every route is a fallback. Nothing is left to chance.
+            </p>
+
+            <div class="features-grid reveal">
+                <div class="feat">
+                    <div class="feat-icon red">✦</div>
+                    <h3>Sealed Cryptography</h3>
+                    <p>Ed25519 identity, X25519 key exchange, ChaCha20-Poly1305 authenticated encryption. The same
+                        primitives trusted by Signal and WireGuard.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon gold">⬡</div>
+                    <h3>P2P Delivery</h3>
+                    <p>Direct encrypted dispatch via libp2p. No central authority, no post office. Kademlia DHT stores
+                        messages until your recipient comes online.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon red">◈</div>
+                    <h3>Gmail Bridge</h3>
+                    <p>When the direct route fails, your encrypted payload routes through Gmail — sealed so tightly that
+                        no intermediary can read it.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon gold">↯</div>
+                    <h3>Automatic Routing</h3>
+                    <p>P2P → DHT → Gmail. Your words find their audience by any route necessary. Choose auto, P2P-only,
+                        or Gmail-only modes.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon red">⊞</div>
+                    <h3>Plugin Engine</h3>
+                    <p>Java-based message processing pipeline. Built-in spam filter, auto-tagger, and a simple API to
+                        write your own extensions.</p>
+                </div>
+                <div class="feat">
+                    <div class="feat-icon gold">⌘</div>
+                    <h3>Open API</h3>
+                    <p>Full REST API on port 8420. Build clients, bots, or integrations in any language. Every feature
+                        is an endpoint.</p>
+                </div>
+            </div>
         </section>
 
-        <section class="api-section" id="api">
-            <h2 class="section-title">The Federalist APIs</h2>
-            <p class="section-subtitle">Build your own dispatches with the JSON REST API on port 8420.</p>
+        <!-- ── STACK ── -->
+        <section class="stack-section" id="stack">
+            <div class="section-label">Architecture</div>
+            <h2>Four languages. One republic.</h2>
+            <p class="section-desc">
+                Each component written in the language that serves it best — forged together through a unified API.
+            </p>
 
-            <div class="api-endpoint">
-                <span class="method method-get">GET</span>
-                <span class="api-path">/api/identity</span>
-                <span class="api-desc">Your Ledger ID & public key</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-get">GET</span>
-                <span class="api-path">/api/messages</span>
-                <span class="api-desc">List messages by folder</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-post">POST</span>
-                <span class="api-path">/api/messages</span>
-                <span class="api-desc">Send encrypted message</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-get">GET</span>
-                <span class="api-path">/api/peers</span>
-                <span class="api-desc">Connected P2P peers</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-post">POST</span>
-                <span class="api-path">/api/peers</span>
-                <span class="api-desc">Connect to peer via multiaddr</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-get">GET</span>
-                <span class="api-path">/api/settings</span>
-                <span class="api-desc">Delivery mode & config</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-put">PUT</span>
-                <span class="api-path">/api/settings</span>
-                <span class="api-desc">Update settings</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-post">POST</span>
-                <span class="api-path">/api/gmail/config</span>
-                <span class="api-desc">Configure Gmail bridge</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-post">POST</span>
-                <span class="api-path">/api/gmail/fetch</span>
-                <span class="api-desc">Fetch Gmail inbox</span>
-            </div>
-            <div class="api-endpoint">
-                <span class="method method-delete">DELETE</span>
-                <span class="api-path">/api/messages/{id}</span>
-                <span class="api-desc">Delete a message</span>
+            <div class="stack-grid reveal">
+                <div class="stack-card">
+                    <div class="stack-lang rust">Rust</div>
+                    <h3>Core Engine</h3>
+                    <p>Cryptography, P2P networking, DHT, Gmail bridge, SQLite storage, REST API server.</p>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-lang cs">C# · Avalonia</div>
+                    <h3>Desktop UI</h3>
+                    <p>Cross-platform MVVM desktop app with fluent dark theme. Windows, macOS, Linux.</p>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-lang java">Java</div>
+                    <h3>Plugin Engine</h3>
+                    <p>Extensible message pipeline. SpamFilter, AutoTagger, and custom plugin support.</p>
+                </div>
+                <div class="stack-card">
+                    <div class="stack-lang py">Python</div>
+                    <h3>CLI Toolkit</h3>
+                    <p>Interactive REPL, API client, and smoke test suite. Zero dependencies.</p>
+                </div>
             </div>
         </section>
+
+        <!-- ── API ── -->
+        <section id="api">
+            <div class="section-label">Reference</div>
+            <h2>The Dispatches</h2>
+            <p class="section-desc">JSON REST API on 127.0.0.1:8420</p>
+
+            <div class="api-grid reveal">
+                <div class="api-row">
+                    <span class="tag tag-g">GET</span>
+                    <span class="api-path">/api/identity</span>
+                    <span class="api-desc">Your sealed identity</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-g">GET</span>
+                    <span class="api-path">/api/messages</span>
+                    <span class="api-desc">List by folder</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-p">POST</span>
+                    <span class="api-path">/api/messages</span>
+                    <span class="api-desc">Send encrypted dispatch</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-d">DELETE</span>
+                    <span class="api-path">/api/messages/{id}</span>
+                    <span class="api-desc">Burn after reading</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-g">GET</span>
+                    <span class="api-path">/api/peers</span>
+                    <span class="api-desc">Connected couriers</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-p">POST</span>
+                    <span class="api-path">/api/peers</span>
+                    <span class="api-desc">Connect via multiaddr</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-g">GET</span>
+                    <span class="api-path">/api/settings</span>
+                    <span class="api-desc">Delivery mode & config</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-u">PUT</span>
+                    <span class="api-path">/api/settings</span>
+                    <span class="api-desc">Update settings</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-p">POST</span>
+                    <span class="api-path">/api/gmail/config</span>
+                    <span class="api-desc">Configure fallback post</span>
+                </div>
+                <div class="api-row">
+                    <span class="tag tag-p">POST</span>
+                    <span class="api-path">/api/gmail/fetch</span>
+                    <span class="api-desc">Fetch from the post office</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CTA ── -->
+        <div class="cta">
+            <div class="section-label">Open Source</div>
+            <h2>Rise up</h2>
+            <p class="section-desc">
+                Ledger is MIT-licensed and ready for contributors.
+                Take control of your correspondence.
+            </p>
+            <a href="https://github.com/WilledMercury75/Ledger-Email-Client" class="btn btn-accent">
+                View Repository →
+            </a>
+        </div>
 
         <footer>
             <p>
-                Forged with 🪶 by <a href="https://github.com/WilledMercury75">WilledMercury75</a> •
-                <a href="https://github.com/WilledMercury75/Ledger-Email-Client">Source Code</a> •
-                MIT License •
-                <em style="color:#4a4e6a;">"I wrote my way out."</em>
+                <a href="https://github.com/WilledMercury75">WilledMercury75</a> ·
+                <a href="https://github.com/WilledMercury75/Ledger-Email-Client">Source</a> ·
+                MIT License
+                <span class="aside">there's a million things I haven't sent — but just you wait</span>
             </p>
         </footer>
     </div>
 
     <script>
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
-
-        // Intersection Observer for fade-in animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.feature-card, .api-endpoint').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            observer.observe(el);
-        });
+        // Reveal on scroll
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
     </script>
 </body>
 

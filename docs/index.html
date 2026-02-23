@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ledger — Decentralized Encrypted Mail Client</title>
-    <meta name="description" content="Open-source decentralized encrypted mail client with P2P messaging, Gmail bridge, and end-to-end encryption. Built with Rust, JavaScript API, and cross-platform UI.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Open-source decentralized encrypted mail client with P2P messaging, Gmail bridge, and end-to-end encryption. Built with Rust, JavaScript API, and cross-platform UI.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --bg-primary: #0a0a1a;
             --bg-secondary: #0f1629;
@@ -34,9 +41,11 @@
         /* Animated background */
         .bg-grid {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image: 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
                 linear-gradient(rgba(233, 69, 96, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(233, 69, 96, 0.03) 1px, transparent 1px);
             background-size: 60px 60px;
@@ -45,8 +54,13 @@
         }
 
         @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(60px, 60px); }
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(60px, 60px);
+            }
         }
 
         .glow-orb {
@@ -58,13 +72,42 @@
             animation: float 8s ease-in-out infinite;
         }
 
-        .glow-orb-1 { width: 400px; height: 400px; background: #e94560; top: -100px; right: -100px; }
-        .glow-orb-2 { width: 300px; height: 300px; background: #0f3460; bottom: 10%; left: -50px; animation-delay: -4s; }
-        .glow-orb-3 { width: 200px; height: 200px; background: #533483; top: 50%; right: 20%; animation-delay: -2s; }
+        .glow-orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #e94560;
+            top: -100px;
+            right: -100px;
+        }
+
+        .glow-orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #0f3460;
+            bottom: 10%;
+            left: -50px;
+            animation-delay: -4s;
+        }
+
+        .glow-orb-3 {
+            width: 200px;
+            height: 200px;
+            background: #533483;
+            top: 50%;
+            right: 20%;
+            animation-delay: -2s;
+        }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(20px, -20px); }
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(20px, -20px);
+            }
         }
 
         .container {
@@ -89,7 +132,9 @@
             letter-spacing: -0.5px;
         }
 
-        .logo span { color: var(--accent); }
+        .logo span {
+            color: var(--accent);
+        }
 
         .nav-links {
             display: flex;
@@ -105,7 +150,9 @@
             transition: color 0.2s;
         }
 
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover {
+            color: var(--accent);
+        }
 
         .btn {
             display: inline-flex;
@@ -204,7 +251,7 @@
             margin: 60px auto;
             max-width: 700px;
             text-align: left;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
 
         .terminal-header {
@@ -214,10 +261,23 @@
             gap: 8px;
         }
 
-        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .terminal-dot.red { background: #ff5f56; }
-        .terminal-dot.yellow { background: #ffbd2e; }
-        .terminal-dot.green { background: #27c93f; }
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background: #ff5f56;
+        }
+
+        .terminal-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .terminal-dot.green {
+            background: #27c93f;
+        }
 
         .terminal-body {
             padding: 20px;
@@ -227,10 +287,21 @@
             color: #8b949e;
         }
 
-        .terminal-body .prompt { color: #e94560; }
-        .terminal-body .cmd { color: #f0f6fc; }
-        .terminal-body .output { color: #58a6ff; }
-        .terminal-body .success { color: #3fb950; }
+        .terminal-body .prompt {
+            color: #e94560;
+        }
+
+        .terminal-body .cmd {
+            color: #f0f6fc;
+        }
+
+        .terminal-body .output {
+            color: #58a6ff;
+        }
+
+        .terminal-body .success {
+            color: #3fb950;
+        }
 
         /* Features */
         .features {
@@ -269,7 +340,7 @@
         .feature-card:hover {
             border-color: var(--accent);
             transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
 
         .feature-icon {
@@ -300,7 +371,8 @@
             margin-top: 32px;
         }
 
-        .arch-table th, .arch-table td {
+        .arch-table th,
+        .arch-table td {
             padding: 16px 20px;
             text-align: left;
             border-bottom: 1px solid var(--border);
@@ -314,7 +386,9 @@
             font-weight: 700;
         }
 
-        .arch-table td { font-size: 0.9rem; }
+        .arch-table td {
+            font-size: 0.9rem;
+        }
 
         .arch-table .lang-badge {
             display: inline-block;
@@ -324,14 +398,35 @@
             font-weight: 600;
         }
 
-        .lang-rust { background: rgba(222, 165, 132, 0.15); color: #dea584; }
-        .lang-csharp { background: rgba(104, 33, 122, 0.2); color: #b877db; }
-        .lang-java { background: rgba(237, 134, 56, 0.15); color: #ed8638; }
-        .lang-python { background: rgba(53, 114, 165, 0.2); color: #4b8bbe; }
-        .lang-js { background: rgba(240, 219, 79, 0.15); color: #f0db4f; }
+        .lang-rust {
+            background: rgba(222, 165, 132, 0.15);
+            color: #dea584;
+        }
+
+        .lang-csharp {
+            background: rgba(104, 33, 122, 0.2);
+            color: #b877db;
+        }
+
+        .lang-java {
+            background: rgba(237, 134, 56, 0.15);
+            color: #ed8638;
+        }
+
+        .lang-python {
+            background: rgba(53, 114, 165, 0.2);
+            color: #4b8bbe;
+        }
+
+        .lang-js {
+            background: rgba(240, 219, 79, 0.15);
+            color: #f0db4f;
+        }
 
         /* API section */
-        .api-section { padding: 60px 0; }
+        .api-section {
+            padding: 60px 0;
+        }
 
         .api-endpoint {
             display: flex;
@@ -347,7 +442,9 @@
             transition: border-color 0.2s;
         }
 
-        .api-endpoint:hover { border-color: var(--accent); }
+        .api-endpoint:hover {
+            border-color: var(--accent);
+        }
 
         .method {
             padding: 3px 8px;
@@ -358,13 +455,34 @@
             text-align: center;
         }
 
-        .method-get { background: rgba(59, 185, 80, 0.15); color: #3fb950; }
-        .method-post { background: rgba(88, 166, 255, 0.15); color: #58a6ff; }
-        .method-put { background: rgba(210, 153, 34, 0.15); color: #d29922; }
-        .method-delete { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+        .method-get {
+            background: rgba(59, 185, 80, 0.15);
+            color: #3fb950;
+        }
 
-        .api-path { color: var(--text-primary); }
-        .api-desc { color: var(--text-dim); margin-left: auto; }
+        .method-post {
+            background: rgba(88, 166, 255, 0.15);
+            color: #58a6ff;
+        }
+
+        .method-put {
+            background: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+        }
+
+        .method-delete {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+        }
+
+        .api-path {
+            color: var(--text-primary);
+        }
+
+        .api-desc {
+            color: var(--text-dim);
+            margin-left: auto;
+        }
 
         /* Footer */
         footer {
@@ -379,18 +497,36 @@
             font-size: 0.85rem;
         }
 
-        footer a { color: var(--accent); text-decoration: none; }
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
         /* Responsive */
         @media (max-width: 768px) {
-            h1 { font-size: 2.2rem; }
-            .hero { padding: 40px 0 30px; }
-            .nav-links { display: none; }
-            .feature-grid { grid-template-columns: 1fr; }
-            .api-desc { display: none; }
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero {
+                padding: 40px 0 30px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .api-desc {
+                display: none;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="bg-grid"></div>
     <div class="glow-orb glow-orb-1"></div>
@@ -399,7 +535,8 @@
 
     <div class="container">
         <nav>
-            <div class="logo">🔐 <span>Ledger</span>Mail</div>
+            <div class="logo"><img src="quill-logo.png" alt="Ledger"
+                    style="height:36px;vertical-align:middle;margin-right:8px;" /><span>Ledger</span>Mail</div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#architecture">Architecture</a></li>
@@ -409,14 +546,17 @@
         </nav>
 
         <section class="hero">
-            <div class="badge">🛡️ End-to-End Encrypted</div>
+            <img src="quill-logo.png" alt="Ledger Quill"
+                style="height:100px;margin-bottom:16px;filter:drop-shadow(0 0 30px rgba(233,69,96,0.4));" />
+            <div class="badge">🛡️ "I am not throwing away my shot" — at privacy</div>
             <h1>
-                Decentralized<br>
-                <span class="gradient-text">Encrypted Mail</span>
+                Write Your<br>
+                <span class="gradient-text">Letters in Cipher</span>
             </h1>
             <p class="hero-subtitle">
-                Peer-to-peer encrypted messaging with automatic Gmail fallback.
-                No servers. No tracking. Your keys, your mail.
+                In the tradition of the Founders who wrote in code to protect their words —
+                Ledger delivers peer-to-peer encrypted mail with automatic Gmail fallback.
+                No servers. No surveillance. Your quill, your seal.
             </p>
             <div class="hero-actions">
                 <a href="https://github.com/WilledMercury75/Ledger-Email-Client" class="btn btn-primary">
@@ -441,51 +581,58 @@
                     <div><span class="success">✓</span> REST API listening on 127.0.0.1:8420</div>
                     <div></div>
                     <div><span class="prompt">$</span> <span class="cmd">curl localhost:8420/api/identity</span></div>
-                    <div><span class="output">{"success": true, "data": {"ledger_id": "ledger:GNH1P6TV..."}}</span></div>
+                    <div><span class="output">{"success": true, "data": {"ledger_id": "ledger:GNH1P6TV..."}}</span>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="features" id="features">
-            <h2 class="section-title">Built Different</h2>
-            <p class="section-subtitle">Privacy-first email that works even when the network doesn't.</p>
+            <h2 class="section-title">"Why Do You Write Like You're Running Out of Time?"</h2>
+            <p class="section-subtitle">Because every word deserves the protection the Founders gave theirs.</p>
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>End-to-End Encryption</h3>
-                    <p>Ed25519 signatures, X25519 key exchange, ChaCha20-Poly1305 encryption. Same crypto stack as Signal and WireGuard.</p>
+                    <div class="feature-icon">🪶</div>
+                    <h3>Sealed With Cipher</h3>
+                    <p>Ed25519 signatures, X25519 key exchange, ChaCha20-Poly1305 — cryptography worthy of Hamilton's
+                        own correspondence.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Peer-to-Peer Delivery</h3>
-                    <p>Direct encrypted messaging via libp2p. No central servers. Kademlia DHT for offline message storage and peer discovery.</p>
+                    <div class="feature-icon">📜</div>
+                    <h3>Dispatch by Courier</h3>
+                    <p>Direct encrypted messaging via libp2p — no crown, no post office, no middlemen. Kademlia DHT
+                        holds your letters until the recipient arrives.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📧</div>
-                    <h3>Gmail Bridge</h3>
-                    <p>Seamless fallback to Gmail when peers are offline. Encrypted payloads travel through SMTP — Gmail sees nothing useful.</p>
+                    <div class="feature-icon">🏛️</div>
+                    <h3>The Public Post</h3>
+                    <p>When the courier can't reach you, the letter travels through Gmail — but sealed so tightly that
+                        no postmaster can read it.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3>Auto Fallback</h3>
-                    <p>P2P → DHT → Gmail. Messages always get delivered. Choose auto, P2P-only, or Gmail-only delivery modes.</p>
+                    <div class="feature-icon">⚔️</div>
+                    <h3>Never Undelivered</h3>
+                    <p>P2P → DHT → Gmail. Like Hamilton, your words will find their audience — by any route necessary.
+                    </p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🧩</div>
                     <h3>Plugin System</h3>
-                    <p>Java-based plugin engine. Built-in spam filter and auto-tagger. Write your own message processors with the MessagePlugin API.</p>
+                    <p>Java-based plugin engine. Built-in spam filter and auto-tagger. Write your own message processors
+                        with the MessagePlugin API.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📡</div>
                     <h3>REST API</h3>
-                    <p>Full JSON API on 127.0.0.1:8420. Build your own clients, bots, or integrations in any language — JavaScript, Python, or anything with HTTP.</p>
+                    <p>Full JSON API on 127.0.0.1:8420. Build your own clients, bots, or integrations in any language —
+                        JavaScript, Python, or anything with HTTP.</p>
                 </div>
             </div>
         </section>
 
         <section class="architecture" id="architecture">
-            <h2 class="section-title">Polyglot Architecture</h2>
-            <p class="section-subtitle">Four languages. One system. Zero compromises.</p>
+            <h2 class="section-title">"A Treasury of Words"</h2>
+            <p class="section-subtitle">Four languages forged into one system — like a republic of code.</p>
             <table class="arch-table">
                 <thead>
                     <tr>
@@ -525,8 +672,8 @@
         </section>
 
         <section class="api-section" id="api">
-            <h2 class="section-title">API Endpoints</h2>
-            <p class="section-subtitle">Build integrations with the JSON REST API on port 8420.</p>
+            <h2 class="section-title">The Federalist APIs</h2>
+            <p class="section-subtitle">Build your own dispatches with the JSON REST API on port 8420.</p>
 
             <div class="api-endpoint">
                 <span class="method method-get">GET</span>
@@ -582,9 +729,10 @@
 
         <footer>
             <p>
-                Built with 🔐 by <a href="https://github.com/WilledMercury75">WilledMercury75</a> •
+                Forged with 🪶 by <a href="https://github.com/WilledMercury75">WilledMercury75</a> •
                 <a href="https://github.com/WilledMercury75/Ledger-Email-Client">Source Code</a> •
-                MIT License
+                MIT License •
+                <em style="color:#4a4e6a;">"I wrote my way out."</em>
             </p>
         </footer>
     </div>
@@ -592,7 +740,7 @@
     <script>
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -617,4 +765,5 @@
         });
     </script>
 </body>
+
 </html>
